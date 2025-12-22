@@ -5,3 +5,5 @@ only left mcp certificate
 After finishing mcp course
 new domain doesnt work
 mcp course finished
+
+starts on 22nd december
