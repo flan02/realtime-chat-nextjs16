@@ -8,3 +8,5 @@ mcp course finished
 
 starts on 22nd december
 24/12 - 31/12 offline
+
+happy holidays
