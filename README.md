@@ -5,4 +5,4 @@ we start after redis course
 
 nextjs - hono - upstash/redis
 
-50% redis completed
+55% redis completed
