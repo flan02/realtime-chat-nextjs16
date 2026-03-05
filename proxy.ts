@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { redis } from "./libs/redis"
 import { nanoid } from "nanoid"
+import { Meta } from "./types"
 
 export const proxy = async (req: NextRequest) => {
   const pathname = req.nextUrl.pathname
@@ -10,26 +11,18 @@ export const proxy = async (req: NextRequest) => {
 
   const roomId = roomMatch[1]
 
-  const meta = await redis.hgetall<{ connected: string[]; createdAt: number }>(
-    `meta:${roomId}`
-  )
+  // get all properties of the hash
+  const meta = await redis.hgetall<Meta>(`meta:${roomId}`)
 
-  if (!meta) {
-    return NextResponse.redirect(new URL("/?error=room-not-found", req.url))
-  }
+  if (!meta) return NextResponse.redirect(new URL("/?error=room-not-found", req.url))
 
-  //const data = "VERIFY IF THIS FILE WORKS WITH HONO"
   const existingToken = req.cookies.get("x-auth-token")?.value
 
-  // USER IS ALLOWED TO JOIN ROOM
-  if (existingToken && meta.connected.includes(existingToken)) {
-    return NextResponse.next()
-  }
+  // * USER IS ALLOWED TO JOIN ROOM
+  if (existingToken && meta.connected.includes(existingToken)) return NextResponse.next()
 
-  // USER IS NOT ALLOWED TO JOIN
-  if (meta.connected.length >= 2) {
-    return NextResponse.redirect(new URL("/?error=room-full", req.url))
-  }
+  // ! USER IS NOT ALLOWED TO JOIN
+  if (meta.connected.length >= 2) return NextResponse.redirect(new URL("/?error=room-full", req.url))
 
   const response = NextResponse.next()
 
@@ -42,9 +35,7 @@ export const proxy = async (req: NextRequest) => {
     sameSite: "strict",
   })
 
-  await redis.hset(`meta:${roomId}`, {
-    connected: [...meta.connected, token],
-  })
+  await redis.hset(`meta:${roomId}`, { connected: [...meta.connected, token] })
 
   return response
 }

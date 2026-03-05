@@ -13,7 +13,7 @@ const useRoom = () => {
 
   const { mutate: createRoom } = useMutation({
     mutationFn: async () => {
-      const res = await client.api.room.create.$post()
+      const res = await client.api.room.create.$post() // get the roomId from our backend
 
       if (res.ok) {
         const data = await res.json()

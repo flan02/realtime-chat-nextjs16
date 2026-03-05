@@ -11,3 +11,11 @@ nextjs - hono - upstash/redis
 ## Hono website
 
 [website](https://hono.dev/)
+
+## Params comparison
+
+| Framework | Params                   | Purpose                         |
+| :-------- | :----------------------- | :------------------------------ |
+| Express   | (req, res, next)         | Separated objects               |
+| Elysia    | ({ query, set, cookie }) | Destructured context            |
+| Hono      | (c)                      | Centralized and unique context  |
