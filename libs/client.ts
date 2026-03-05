@@ -1,4 +1,4 @@
-// import { treaty } from "@elysiajs/eden"
-// import type { App } from "../app/api/[[...slugs]]/route"
+import { hc } from 'hono/client'
+import type { AppType } from "@/app/api/[[...route]]/route"
 
-// export const client = treaty<App>("localhost:3000").api
+export const client = hc<AppType>('/')

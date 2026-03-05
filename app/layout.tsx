@@ -1,26 +1,12 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google"
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers"
+import { geistMono, geistSans, jetbrainsMono } from "@/utils/fonts";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-})
 
 export const metadata: Metadata = {
-  title: "Realtime Chat App",
+  title: "Self-destructing chat app",
   description: "Created by Nextjs 16, Redis",
 };
 
