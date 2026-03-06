@@ -1,6 +1,8 @@
+import 'server-only'
 import { redis } from "@/libs/redis"
 import { InferRealtimeEvents, Realtime } from "@upstash/realtime"
 import z from "zod"
+import { chatSchema } from "@/zod/schema"
 
 const message = z.object({
   id: z.string(),
@@ -20,6 +22,6 @@ const schema = {
   },
 }
 
-export const realtime = new Realtime({ schema, redis })
+export const realtime = new Realtime({ schema: chatSchema, redis })
 export type RealtimeEvents = InferRealtimeEvents<typeof realtime>
-export type Message = z.infer<typeof message>
+export type MessageToRedis = z.infer<typeof message>

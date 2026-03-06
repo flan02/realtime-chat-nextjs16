@@ -24,3 +24,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Chrome styling for scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* Ancho del scroll */
+}
+
+/* bar styling */
+::-webkit-scrollbar-thumb {
+  background-color: oklch(57.7% 0.245 27.325);
+  border-radius: 5px; /* Borde redondeado */
+}
+
+/* track bar styling */
+::-webkit-scrollbar-track {
+  background-color: rgb(15, 23, 42);
+}

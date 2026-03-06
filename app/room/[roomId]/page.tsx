@@ -5,12 +5,12 @@ import useTimeToLive from "@/hooks/use-ttl"
 import { useUsername } from "@/hooks/use-username"
 import { client } from "@/libs/client"
 import { useRealtime } from "@/libs/realtime-client"
-import { MessagesType } from "@/types"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { format } from "date-fns"
 import { useParams, useRouter } from "next/navigation"
 import { useRef, useState } from "react"
-
+import { InferResponseType } from "hono/client"
+// import { realtime } from "@/libs/realtime"
 
 const Page = () => {
   const params = useParams()
@@ -35,13 +35,16 @@ const Page = () => {
 
   const { timeRemaining } = useTimeToLive(ttlData)
 
+  type GetMessagesResponse = InferResponseType<typeof client.api.messages.$get>
 
 
-
-  const { data: messages, refetch } = useQuery<{ messages: MessagesType }>({
+  const { data: messages, refetch } = useQuery<GetMessagesResponse>({
     queryKey: ["messages", roomId],
     queryFn: async () => {
+
+      // request to hono api to get all messages of the room
       const res = await client.api.messages.$get({ query: { roomId } })
+
       if (!res.ok) {
         throw new Error("Failed to fetch messages")
       }
@@ -70,6 +73,9 @@ const Page = () => {
 
   })
 
+  // const channel = realtime.channel(roomId)
+
+  // ESCUCHAR EN TIEMPO REAL
   useRealtime({
     channels: [roomId],
     events: ["chat.message", "chat.destroy"],
@@ -85,9 +91,9 @@ const Page = () => {
   })
 
   const { mutate: destroyRoom } = useMutation({
-    // mutationFn: async () => {
-    //   await client.room.delete(null, { query: { roomId } })
-    // },
+    mutationFn: async () => {
+      // await client.api.room.delete(null, { query: { roomId } })
+    },
   })
 
 
@@ -98,36 +104,41 @@ const Page = () => {
 
       {/* MESSAGES */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
-        {messages?.messages.length === 0 && (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-zinc-600 text-sm font-mono">
-              No messages yet, start the conversation.
-            </p>
-          </div>
-        )}
-
-        {messages?.messages.map((msg: { id: string; sender: string; text: string; timestamp: number }) => (
-          <div key={msg.id} className="flex flex-col items-start">
-            <div className="max-w-[80%] group">
-              <div className="flex items-baseline gap-3 mb-1">
-                <span
-                  className={`text-xs font-bold ${msg.sender === username ? "text-green-500" : "text-blue-500"
-                    }`}
-                >
-                  {msg.sender === username ? "YOU" : msg.sender}
-                </span>
-
-                <span className="text-[10px] text-zinc-600">
-                  {format(msg.timestamp, "HH:mm")}
-                </span>
-              </div>
-
-              <p className="text-sm text-zinc-300 leading-relaxed break-all">
-                {msg.text}
+        {
+          Array.isArray(messages) && messages.length === 0 && (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-zinc-600 text-sm font-mono">
+                No messages yet, start the conversation.
               </p>
             </div>
-          </div>
-        ))}
+          )
+        }
+
+        {
+          Array.isArray(messages) && messages.map((msg) => (
+            <div key={msg.id} className="flex flex-col items-start border border-red-700/30 bg-red-950/10 px-2 py-1.5 rounded-md">
+              <div className="max-w-[80%] group">
+                <div className="flex items-baseline gap-3 mb-1">
+                  <span
+                    className={`text-xs font-extrabold ${msg.sender === username ? "text-red-700/60" : "text-red-800/60"
+                      }`}
+                  >
+                    {msg.sender === username ? "YOU" : msg.sender}
+                  </span>
+
+                  <span className="text-[10px] text-zinc-600">
+                    {format(msg.timestamp, "HH:mm")}
+                  </span>
+                </div>
+
+                <p className="text-sm text-red-200 leading-relaxed break-all tracking-wider">
+                  {
+                    messages ? msg.text : <p className="text-white">skeleton...</p>
+                  }
+                </p>
+              </div>
+            </div>
+          ))}
       </div>
 
       <div className="p-4 border-t border-zinc-800 bg-zinc-900/30">
@@ -148,7 +159,7 @@ const Page = () => {
               }}
               placeholder="Type message..."
               onChange={(e) => setInput(e.target.value)}
-              className="w-full bg-black border border-zinc-800 focus:border-zinc-700 focus:outline-none transition-colors text-zinc-100 placeholder:text-zinc-700 py-3 pl-8 pr-4 text-sm"
+              className="w-full bg-black border border-red-500/50 focus:border-red-500 focus:outline-none transition-colors text-red-200 placeholder:text-zinc-700 py-3 pl-8 pr-4 text-sm tracking-wider"
             />
           </div>
 
@@ -158,7 +169,7 @@ const Page = () => {
               inputRef.current?.focus()
             }}
             disabled={!input.trim() || isPending}
-            className="bg-zinc-800 text-zinc-400 px-6 text-sm font-bold hover:text-zinc-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="border border-red-500/50 text-red-500 hover:bg-red-500/10 focus:border-red-500 transition-all px-6 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             SEND
           </button>

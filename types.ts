@@ -1,3 +1,5 @@
+import { MessageToRedis } from "./libs/realtime";
+
 export type Meta = {
   connected: string[];
   createdAt: number;
@@ -19,3 +21,9 @@ export type MessagesType = {
   text: string;
   timestamp: number;
 }[]
+
+export interface StreamEntry {
+  data: MessageToRedis;
+  event: string;
+  channel: string;
+}

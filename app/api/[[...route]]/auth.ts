@@ -4,7 +4,8 @@ import { getCookie } from "hono/cookie"
 
 
 export const authMiddleware = createMiddleware(async (c, next) => {
-  const roomId = c.req.param()
+  // const roomId = c.req.param()
+  const roomId = c.req.query('roomId') as string
   const token = getCookie(c, "x-auth-token")
 
   // Basic validation

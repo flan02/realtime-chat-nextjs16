@@ -3,16 +3,15 @@ import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
 import { nanoid } from 'nanoid'
 import { authMiddleware } from './auth'
-import { Env } from '@/types'
+import { Env, StreamEntry } from '@/types'
 import { zValidator } from '@hono/zod-validator'
 import { MessageSchema, RoomIdSchema } from '@/zod/schema'
+import { realtime, MessageToRedis } from '@/libs/realtime'
 
 // Puedes forzar el runtime de Edge para mayor velocidad, similar a lo que buscamos con los streams de Upstash
 export const runtime = 'edge'
 
-
-
-// const app = new Hono().basePath('/api') 
+// ? const app = new Hono().basePath('/api') 
 const app = new Hono<Env>().basePath('/api')
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -41,48 +40,65 @@ const routes = app
     return c.json({ roomId })
   })
   .get('/messages', authMiddleware, async (c) => {
-    const roomId = c.req.query('roomId') as string
+    const roomId = c.req.query('roomId')
+    // 1. Validación temprana (Fail Fast)
+    if (!roomId) return c.json({ error: 'Missing roomId' }, 400);
 
-    if (!roomId) {
-      return c.json({ error: 'Missing roomId' }, 400)
+    const stream = await redis.xrange(roomId, '-', '+')
+
+    if (!stream || typeof stream !== 'object') {
+      return c.json([])
     }
 
-    // ? LRANGE 'key' 0 -1 para obtener todos los mensajes de la lista de Redis
-    const messages = await redis.lrange<string>(`chat:${roomId}`, 0, -1)
+    const typedStream = stream as unknown as Record<string, StreamEntry> // * double cast
 
-    const parsedMessages = messages.map((msg) => {
-      try {
-        return JSON.parse(msg);
-      } catch {
-        return msg; // Fallback por si hay algún string plano viejo
-      }
+    // 3. Manejo de stream vacío
+    const messages = Object.values(typedStream).map((entry) => {
+      // Extraemos el 'data' que es donde está tu mensaje de Zod
+      return entry.data
     })
-    return c.json({ messages: parsedMessages })
+
+    // 3. Devolvemos el array limpio al frontend
+    return c.json(messages)
   })
   .post('/messages', authMiddleware, zValidator('query', RoomIdSchema), zValidator('json', MessageSchema), async (c) => {
     // Get custom data from context set by authMiddleware
 
-    const auth = c.get('auth')
+    // const auth = c.get('auth')
     // const { sender, text } = await c.req.json()
     const { roomId } = c.req.valid('query')  // * Hono zodValidator solution
     const { sender, text } = c.req.valid('json')
 
     const roomExists = await redis.exists(`meta:${roomId}`)
-    if (!roomExists) return c.json({ error: 'Room not found' }, 404)
+    if (!roomExists) throw Error("Room does not exist")
 
-
-    await redis.rpush(`chat:${roomId}`, JSON.stringify({
+    const message: MessageToRedis = {
+      id: nanoid(),
       sender,
-      text
-    })) // Guardamos el mensaje como string en Redis, luego lo parseamos al obtenerlo
+      text,
+      timestamp: Date.now(),
+      roomId
+    }
 
-    await redis.publish(roomId, JSON.stringify({
-      event: "chat.message",
-      token: auth.token
-    }))
+    // add message to history
+    // await redis.rpush(`messages:${roomId}`, { ...message, token: auth.token }) // push the message to an ordered list in Redis
+
+    // add to redis stream for real-time updates
+    await realtime.channel(roomId).emit("chat.message", message)
 
     const roomTtl = await redis.ttl(`meta:${roomId}`);
-    if (roomTtl > 0) await redis.expire(`chat:${roomId}`, roomTtl);
+
+    // only if the room is still alive, we sync all other keys TTLs
+    if (roomTtl > 0) {
+      await redis.pipeline()
+        // .expire(`messages:${roomId}`, roomTtl)
+        // .expire(`history:${roomId}`, roomTtl)
+        .expire(roomId, roomTtl)
+        .exec();
+    } else {
+      console.warn(`Attempted to message a dead room: ${roomId}`)
+    }
+
 
     return c.json({ success: true })
   })
