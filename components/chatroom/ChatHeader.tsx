@@ -1,7 +1,7 @@
 'use client'
 import useCopy from '@/hooks/use-copy'
 import { formatTimeRemaining } from '@/utils/functions'
-import { useEffect, useState } from 'hono/jsx/dom'
+
 
 
 type Props = {
@@ -12,14 +12,10 @@ type Props = {
 
 const ChatHeader = ({ timeRemaining, destroyRoom, roomId }: Props) => {
 
-  const [isMounted, setIsMounted] = useState(false)
 
-  const currentUrl = isMounted ? window.location.href : ""
 
-  const { copyStatus, copyLink } = useCopy({ strToCopy: currentUrl })
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
+
+  const { copyStatus, copyLink } = useCopy()
 
 
 
@@ -31,7 +27,7 @@ const ChatHeader = ({ timeRemaining, destroyRoom, roomId }: Props) => {
           <div className="flex items-center gap-2">
             <span className="font-bold text-red-500 truncate">{roomId.slice(0, 10) + "..."}</span>
             <button
-              onClick={copyLink}
+              onClick={() => copyLink(window.location.href)}
               className="text-[10px] bg-zinc-800 hover:bg-zinc-700 px-2 py-0.5 rounded text-zinc-400 hover:text-zinc-200 transition-colors"
             >
               {copyStatus}

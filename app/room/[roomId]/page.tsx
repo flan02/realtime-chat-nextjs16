@@ -38,7 +38,7 @@ const Page = () => {
   type GetMessagesResponse = InferResponseType<typeof client.api.messages.$get>
 
 
-  const { data: messages, refetch } = useQuery<GetMessagesResponse>({
+  const { data: messages, refetch, isLoading } = useQuery<GetMessagesResponse>({
     queryKey: ["messages", roomId],
     queryFn: async () => {
 
@@ -98,12 +98,13 @@ const Page = () => {
 
 
 
+
   return (
     <main className="flex flex-col h-screen max-h-screen overflow-hidden bg-black">
       <ChatHeader timeRemaining={timeRemaining} destroyRoom={destroyRoom} roomId={roomId} />
 
       {/* MESSAGES */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto p-4 space-y-1 scrollbar-thin">
         {
           Array.isArray(messages) && messages.length === 0 && (
             <div className="flex items-center justify-center h-full">
@@ -114,31 +115,55 @@ const Page = () => {
           )
         }
 
+        {isLoading && (
+          <div className="space-y-2">
+            {/* Dibujamos 4 esqueletos que imitan tus mensajes reales */}
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex flex-col items-start border border-red-900/20 bg-red-950/5 px-2 py-1.5 rounded-md animate-pulse">
+                <div className="flex items-baseline gap-3 mb-2">
+                  {/* El nombre (YOU o Sender) */}
+                  <div className="h-2 w-12 bg-red-900/30 rounded" />
+                  {/* La hora */}
+                  <div className="h-2 w-8 bg-zinc-800 rounded" />
+                </div>
+                {/* El cuerpo del mensaje (simulamos 2 líneas de texto) */}
+                <div className="space-y-2 w-full">
+                  <div className="h-3 w-[90%] bg-red-900/10 rounded" />
+                  <div className="h-3 w-[40%] bg-red-900/10 rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {
-          Array.isArray(messages) && messages.map((msg) => (
-            <div key={msg.id} className="flex flex-col items-start border border-red-700/30 bg-red-950/10 px-2 py-1.5 rounded-md">
-              <div className="max-w-[80%] group">
+          !isLoading && Array.isArray(messages) && messages.map((msg) => {
+            const isMe = msg.sender === username;
+            return (<div key={msg.id} className={`flex flex-col w-full px-2`}>
+              <div
+                className={`w-fit max-w-[80%] px-3 py-1.5 rounded-md border transition-all ${isMe
+                  ? "items-end border-red-700/30 bg-red-800/10 ml-auto text-right"
+                  : "items-start border-red-800/20 bg-red-950/15 mr-auto text-left"
+                  }`}
+              >
                 <div className="flex items-baseline gap-3 mb-1">
-                  <span
-                    className={`text-xs font-extrabold ${msg.sender === username ? "text-red-700/60" : "text-red-800/60"
+                  <p
+                    className={`text-xs font-extrabold ${isMe ? "text-red-700/70" : "text-red-900/50"
                       }`}
                   >
-                    {msg.sender === username ? "YOU" : msg.sender}
-                  </span>
+                    {msg.sender === username ? username : msg.sender}
+                  </p>
 
                   <span className="text-[10px] text-zinc-600">
                     {format(msg.timestamp, "HH:mm")}
                   </span>
                 </div>
-
-                <p className="text-sm text-red-200 leading-relaxed break-all tracking-wider">
-                  {
-                    messages ? msg.text : <p className="text-white">skeleton...</p>
-                  }
-                </p>
+                <p className={`text-sm leading-relaxed break-all tracking-wider ${isMe ? "text-red-200/80" : "text-zinc-300/30"}`}>{msg.text}</p>
               </div>
             </div>
-          ))}
+            )
+          }
+          )}
       </div>
 
       <div className="p-4 border-t border-zinc-800 bg-zinc-900/30">

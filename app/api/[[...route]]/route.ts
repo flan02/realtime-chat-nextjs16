@@ -19,6 +19,42 @@ const routes = app
   .get('/welcome', (res) => {
     return res.json({ message: 'Welcome to the Realtime Chat API!' })
   })
+  .get("/", async (c) => {
+    // const messages = await redis.lrange<MessageToRedis>(`messages:${auth.roomId}`, 0, -1)
+    // 1. Obtenemos los datos de la URL en lugar de 'auth'
+    const roomId = c.req.query("roomId") as string
+    const userToken = c.req.query("token")
+
+    // if (!roomId) {
+    //   return c.json({ error: "Missing roomId" }, 400)
+    // }
+    //   const messages = await redis.lrange<MessageToRedis>(`messages:${roomId}`, 0, -1)
+
+    const rawStream = await redis.xrange(roomId, "-", "+")
+
+    if (!rawStream || typeof rawStream !== 'object') {
+      return c.json({ messages: [] })
+    }
+
+    const typedStream = rawStream as unknown as Record<string, StreamEntry>
+
+    // const messages = Object.values(typedStream).map((entry) => ({
+    //   ...entry.data,
+    //   token: entry.data.token === userToken ? userToken : undefined
+    // }))
+    const messages = Object.values(typedStream).map((entry) => {
+      const { token, ...messageWithoutToken } = entry.data; // Sacamos el token del objeto
+
+      return {
+        ...messageWithoutToken,
+        isMine: token === userToken, // 👈 Return true/false, the actual token never is sent from server to client side 
+      }
+    })
+
+    return c.json({ messages })
+
+
+  })
   .get('/room/ttl', authMiddleware, async (c) => {
     const auth = c.get('auth')
 

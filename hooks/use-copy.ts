@@ -1,18 +1,27 @@
 'use client'
 
-import { useState } from "hono/jsx/dom"
+import { useState } from "react"
 
-type Props = {
-  strToCopy: string
-}
 
-const useCopy = ({ strToCopy }: Props) => {
+
+
+
+const useCopy = () => {
   const [copyStatus, setCopyStatus] = useState("COPY")
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(strToCopy)
-    setCopyStatus("COPIED!")
-    setTimeout(() => setCopyStatus("COPY"), 2000)
+  // Ahora la función recibe el string en el momento del click
+  const copyLink = (textToCopy: string) => {
+    if (!textToCopy) {
+      console.warn("No hay nada para copiar todavía.");
+      return;
+    }
+
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        setCopyStatus("COPIED!")
+        setTimeout(() => setCopyStatus("COPY"), 2000)
+      })
+      .catch((err) => console.error("Error al copiar:", err))
   }
 
   return { copyStatus, copyLink }
