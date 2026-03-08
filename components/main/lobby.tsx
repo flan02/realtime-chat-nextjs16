@@ -7,7 +7,7 @@ export function Lobby() {
   const { username, createRoom, wasDestroyed, error } = useRoom()
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-red-500/30">
+    <div className="min-h-screen hero-patterns text-white selection:bg-red-500/30">
       {/* Navbar */}
       <nav className="flex justify-between items-center p-6 border-b border-white/10 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 group cursor-default">
@@ -28,7 +28,7 @@ export function Lobby() {
           GUT OUT THE NOISE. <br />
           <span className="text-red-600">KEEP THE PRIVACY.</span>
         </h1>
-        <p className="max-w-2xl mx-auto text-zinc-500 text-lg mb-10">
+        <p className="max-w-2xl mx-auto text-zinc-600 text-lg mb-10">
           Anonymous, ephemeral, and crypto-powered chat sessions.
           No logs. No registration. No trace. Powered by Redis TTL.
         </p>
@@ -38,7 +38,7 @@ export function Lobby() {
             onClick={() => createRoom()}
             className="w-full md:w-auto px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-sm flex items-center justify-center gap-2 transition-transform active:scale-95">
             {/* CREATE SECURE ROOM*/}
-            START PRIVATE SESSION <ArrowRight className="w-5 h-5" />
+            START PRIVATE CHAT <ArrowRight className="w-5 h-5" />
           </button>
           {/* <button className="w-full md:w-auto px-8 py-4 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 font-bold rounded-sm transition-all">
             ENTER FREE LOBBY
@@ -59,7 +59,7 @@ export function Lobby() {
         </div>
 
         <div className="pt-4">
-          <p className="text-sm underline underline-offset-4 text-red-500/90">A private, self-destructing chat room.</p>
+          <p className="text-sm underline underline-offset-4 text-red-500/90">An easy-to-use, private, secure and self-destructing chat room.</p>
         </div>
 
         {/* Error Messages */}
@@ -126,7 +126,7 @@ export function Lobby() {
 
       {/* Footer */}
       <footer className="py-12 border-t border-white/10 text-center text-zinc-600 text-sm lowercase">
-        <p className="lowercase animate-pulse text-blue-500/50">GUTOUT.XYZ — BUILT FOR SURFING THE CLEAR WEB IN THE SHADOWS.</p>
+        <p className="lowercase animate-pulse text-blue-500/40">GUTOUT.XYZ — BUILT FOR SURFING THE CLEAR WEB IN THE SHADOWS.</p>
       </footer>
     </div>
   );

@@ -1,44 +1,69 @@
 'use client'
 
-import { useRouter } from "next/navigation"
+import { client } from "@/libs/client"
+import { useQuery } from "@tanstack/react-query"
+import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
-type Props = {
-  ttlData: {
-    ttl: number
-  }
-}
 
-const useTimeToLive = ({ ttlData }: Props) => {
+const useTimeToLive = () => {
+  const params = useParams()
+  const roomId = params.roomId as string
   const router = useRouter()
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null)
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (ttlData?.ttl !== undefined) setTimeRemaining(ttlData.ttl)
-  }, [ttlData])
+
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["ttl", roomId],
+    queryFn: async () => {
+      const res = await client.api.room.ttl.$get({ query: { roomId } })
+      if (!res.ok) {
+        throw new Error("Failed to fetch TTL")
+      }
+      return await res.json()
+    },
+    refetchInterval: 10000, // Refetch every 10 seconds to keep the TTL updated
+  })
+
+
 
   useEffect(() => {
-    if (timeRemaining === null || timeRemaining < 0) return
+    async function checkTTL() {
+      if (data && typeof data.ttl === 'number') {
+        setTimeRemaining(data.ttl)
+
+      }
+    }
+    checkTTL()
+
+  }, [data])
+
+
+  useEffect(() => {
+    if (timeRemaining !== null && timeRemaining < 0) return
 
     if (timeRemaining === 0) {
-      router.push("/?destroyed=true")
+      // router.push("/?destroyed=true")
+      router.replace("/?destroyed=true")
       return
     }
 
-    const interval = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev === null || prev <= 1) {
-          clearInterval(interval)
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-
-    return () => clearInterval(interval)
   }, [timeRemaining, router])
 
-  return { timeRemaining }
+  useEffect(() => {
+    if (timeRemaining === null || timeRemaining <= 0) return
+
+    const interval = setInterval(() => {
+      setTimeRemaining((prev) => (prev && prev > 0 ? prev - 1 : 0))
+    }, 1000)
+
+    // 👈 ESTO ES CLAVE: La limpieza debe estar aquí
+    return () => clearInterval(interval)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeRemaining === null])
+
+  return { timeRemaining, isLoading }
 }
+
 
 export default useTimeToLive

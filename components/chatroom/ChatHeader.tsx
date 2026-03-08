@@ -47,9 +47,9 @@ const ChatHeader = ({ timeRemaining, roomId }: Props) => {
         <div className="h-8 w-px bg-zinc-800" />
 
         <div className="flex flex-col">
-          <span className="text-xs text-zinc-500 uppercase">Self-Destruct</span>
+          <span className="text-[11px] dark:text-zinc-500 text-red-200 uppercase">Chat will Self-Destruct in:</span>
           <span
-            className={`text-sm font-bold flex items-center gap-2 ${timeRemaining !== null && timeRemaining < 60
+            className={`tracking-widest text-sm font-bold flex items-center gap-2 ${timeRemaining !== null && timeRemaining < 60
               ? "text-red-500"
               : "text-amber-500"
               }`}
@@ -64,8 +64,8 @@ const ChatHeader = ({ timeRemaining, roomId }: Props) => {
         onClick={() => destroyRoom()}
         className="text-xs bg-zinc-800 hover:bg-red-600 px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-2 disabled:opacity-50"
       >
-        <span className="group-hover:animate-pulse">💣</span>
-        DESTROY NOW
+        {/* <span className="group-hover:animate-pulse">💣</span> */}
+        DESTROY ROOM
       </button>
     </header>
   )

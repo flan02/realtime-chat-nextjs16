@@ -3,7 +3,7 @@ import type { InferRealtimeEvents } from "@upstash/realtime";
 
 export const MessageSchema = z.object({
   sender: z.string().min(5, "Sender name is required").max(30),
-  text: z.string().min(1, "Message cannot be empty").max(100)
+  text: z.string().min(1, "Message cannot be empty").max(200)
 })
 
 export const RoomIdSchema = z.object({

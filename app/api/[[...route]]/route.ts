@@ -40,14 +40,6 @@ const routes = app
 
     return c.json({ messages })
 
-
-  })
-  .get('/room/ttl', authMiddleware, async (c) => {
-    const auth = c.get('auth')
-
-    const secondsToLive = await redis.ttl(`meta:${auth.roomId}`)
-
-    return c.json({ secondsToLive })
   })
   .post('/room/create', async (c) => {
     const ROOM_TTL_SECONDS = 60 * 10 // 10 min
@@ -63,12 +55,24 @@ const routes = app
 
     return c.json({ roomId })
   })
+  .get('/room/ttl', authMiddleware, async (c) => {
+
+    const roomId = c.req.query("roomId") as string
+
+    const ttl = await redis.ttl(`meta:${roomId}`)
+
+    return c.json({ ttl: ttl > 0 ? ttl : 0 })
+  })
   .post('/room/delete', authMiddleware, async (c) => {
     const roomId = c.req.query("roomId") as string
 
-    await redis.del(`meta:${roomId}`)
-    await redis.del(roomId)
+    // ? emit underhood runs a xadd to the stream, so all listeners get notified of the event
     await realtime.channel(roomId).emit("chat.destroy", { isDestroyed: true })
+
+    await Promise.all([
+      redis.del(`meta:${roomId}`),
+      redis.del(roomId)
+    ])
 
     return c.json({ success: true })
   })

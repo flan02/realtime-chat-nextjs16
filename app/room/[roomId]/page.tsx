@@ -8,7 +8,7 @@ import { useRealtime } from "@/libs/realtime-client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { format } from "date-fns"
 import { useParams, useRouter } from "next/navigation"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { InferResponseType } from "hono/client"
 
 const Page = () => {
@@ -20,24 +20,18 @@ const Page = () => {
   const { username } = useUsername()
   const [input, setInput] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
-
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
-  // const { data: ttlData } = useQuery({
-  //   queryKey: ["ttl", roomId],
-  //   queryFn: async () => {
-  //     const res = await client.api.room.ttl.get({ query: { roomId } })
-  //     return res.data
-  //   },
-  // })
 
-  const ttlData = { ttlData: { ttl: 600 } } // 10 min in seconds, same as the TTL we set when creating the room
 
-  const { timeRemaining } = useTimeToLive(ttlData)
+
+
+  const { timeRemaining } = useTimeToLive()
 
   type GetMessagesResponse = InferResponseType<typeof client.api.messages.$get>
 
 
-  const { data: messages, refetch, isLoading } = useQuery<GetMessagesResponse>({
+  const { data: messages, isLoading } = useQuery<GetMessagesResponse>({
     queryKey: ["messages", roomId],
     queryFn: async () => {
       const res = await client.api.messages.$get({
@@ -80,7 +74,8 @@ const Page = () => {
     events: ["chat.message", "chat.destroy"],
     onData: ({ event }) => {
       if (event === "chat.message") {
-        refetch()
+        // refetch()
+        queryClient.invalidateQueries({ queryKey: ["messages", roomId] });
       }
 
       if (event === "chat.destroy") {
@@ -90,8 +85,17 @@ const Page = () => {
   })
 
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
-  console.log("Messages metadata", messages);
+  useEffect(() => {
+    if (messages && Object.keys(messages).length > 0) {
+      // console.log("Messages metadata updated", messages);
+      scrollToBottom();
+    }
+
+  }, [messages]);
 
 
   return (
@@ -99,11 +103,11 @@ const Page = () => {
       <ChatHeader timeRemaining={timeRemaining} roomId={roomId} />
 
       {/* MESSAGES */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-1 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto p-4 my-2 space-y-1 scrollbar-thin border border-red-600/30 w-[80%] mx-auto rounded-md hero-patterns">
         {
           Array.isArray(messages) && messages.length === 0 && (
             <div className="flex items-center justify-center h-full">
-              <p className="text-zinc-600 text-sm font-mono">
+              <p className="text-red-600 text-sm font-mono tracking-wider">
                 No messages yet, start the conversation.
               </p>
             </div>
@@ -138,27 +142,31 @@ const Page = () => {
               <div
                 className={`w-fit max-w-[80%] px-3 py-1.5 rounded-md border transition-all ${isMe
                   ? "items-end border-red-700/30 bg-red-800/10 ml-auto text-right"
-                  : "items-start border-red-800/20 bg-red-950/15 mr-auto text-left"
+                  : "items-start border-red-800/20 bg-zinc-900/50 mr-auto text-left"
                   }`}
               >
                 <div className="flex items-baseline gap-3 mb-1">
                   <p
-                    className={`text-xs font-extrabold ${isMe ? "text-red-700/70" : "text-red-900/50"
+                    className={`text-xs font-extrabold ${isMe ? "text-red-700/70" : "text-red-800/50"
                       }`}
                   >
                     {msg.sender === username ? username : msg.sender}
                   </p>
 
-                  <span className="text-[10px] text-zinc-600">
+                  <span className="text-[10px] dark:text-yellow-300 text-zinc-600">
                     {format(msg.timestamp, "HH:mm")}
                   </span>
                 </div>
-                <p className={`text-sm leading-relaxed break-all tracking-wider ${isMe ? "text-red-200/80" : "text-zinc-300/30"}`}>{msg.text}</p>
+                <p className={`text-[10px] lg:text-[13px] leading-relaxed break-all tracking-wider ${isMe ? "text-red-200" : "text-red-200"}`}>{msg.text}</p>
               </div>
             </div>
             )
           }
           )}
+
+        {
+          Array.isArray(messages) && messages.length > 0 ? <div ref={messagesEndRef} /> : null
+        }
       </div>
 
       <div className="p-4 border-t border-zinc-800 bg-zinc-900/30">
@@ -168,7 +176,6 @@ const Page = () => {
               {">"}
             </span>
             <input
-              autoFocus
               type="text"
               value={input}
               onKeyDown={(e) => {
