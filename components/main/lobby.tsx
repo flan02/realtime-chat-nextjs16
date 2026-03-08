@@ -14,10 +14,10 @@ export function Lobby() {
           <span className="text-2xl font-black tracking-tighter italic">GUTOUT</span>
           <UtensilsCrossed className="w-5 h-5 text-red-500 animate-pulse ml-1" />
         </div>
-        <div className="hidden md:flex items-center gap-5 text-sm font-medium text-zinc-400">
-          <a href="#how" className="hover:text-red-500 transition-colors">HOW IT WORKS</a>
+        <div className="hidden md:flex items-center gap-5 text-xs font-medium text-zinc-400">
+          <a href="#how" className="hover:text-red-500 transition-colors">HOW IT WORKS ?</a>
           <button className="px-4 py-2 border border-red-500/50 text-red-500 hover:bg-red-500/10 transition-all rounded-sm">
-            CRYPTO
+            JOIN AS GUEST
           </button>
         </div>
       </nav>

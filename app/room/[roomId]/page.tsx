@@ -10,7 +10,6 @@ import { format } from "date-fns"
 import { useParams, useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 import { InferResponseType } from "hono/client"
-// import { realtime } from "@/libs/realtime"
 
 const Page = () => {
   const params = useParams()
@@ -41,13 +40,15 @@ const Page = () => {
   const { data: messages, refetch, isLoading } = useQuery<GetMessagesResponse>({
     queryKey: ["messages", roomId],
     queryFn: async () => {
-
-      // request to hono api to get all messages of the room
-      const res = await client.api.messages.$get({ query: { roomId } })
+      const res = await client.api.messages.$get({
+        query: { roomId }
+      })
 
       if (!res.ok) {
         throw new Error("Failed to fetch messages")
       }
+
+
       return await res.json()
     }
   });
@@ -73,9 +74,7 @@ const Page = () => {
 
   })
 
-  // const channel = realtime.channel(roomId)
-
-  // ESCUCHAR EN TIEMPO REAL
+  // * realtime listens to messages in that channel
   useRealtime({
     channels: [roomId],
     events: ["chat.message", "chat.destroy"],
@@ -90,18 +89,14 @@ const Page = () => {
     },
   })
 
-  const { mutate: destroyRoom } = useMutation({
-    mutationFn: async () => {
-      // await client.api.room.delete(null, { query: { roomId } })
-    },
-  })
 
 
+  console.log("Messages metadata", messages);
 
 
   return (
     <main className="flex flex-col h-screen max-h-screen overflow-hidden bg-black">
-      <ChatHeader timeRemaining={timeRemaining} destroyRoom={destroyRoom} roomId={roomId} />
+      <ChatHeader timeRemaining={timeRemaining} roomId={roomId} />
 
       {/* MESSAGES */}
       <div className="flex-1 overflow-y-auto p-4 space-y-1 scrollbar-thin">
