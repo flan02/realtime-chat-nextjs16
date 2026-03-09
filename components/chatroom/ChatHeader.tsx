@@ -3,6 +3,7 @@ import useCopy from '@/hooks/use-copy'
 import { client } from '@/libs/client'
 import { formatTimeRemaining } from '@/utils/functions'
 import { useMutation } from '@tanstack/react-query'
+import { ModeToggle } from '../reutilizable/ModeToggle'
 
 
 
@@ -29,7 +30,7 @@ const ChatHeader = ({ timeRemaining, roomId }: Props) => {
 
 
   return (
-    <header className="border-b border-zinc-800 p-4 flex items-center justify-between bg-zinc-900/30">
+    <header className="border-b border-zinc-300 dark:border-zinc-800 p-4 flex items-center justify-between bg-red-100/30 dark:bg-zinc-900/30">
       <div className="flex items-center gap-4">
         <div className="flex flex-col">
           <span className="text-xs text-zinc-500 uppercase">Room ID</span>
@@ -47,7 +48,7 @@ const ChatHeader = ({ timeRemaining, roomId }: Props) => {
         <div className="h-8 w-px bg-zinc-800" />
 
         <div className="flex flex-col">
-          <span className="text-[11px] dark:text-zinc-500 text-red-200 uppercase">Chat will Self-Destruct in:</span>
+          <span className="text-[11px] text-zinc-500 dark:text-red-200 uppercase">Chat will Self-Destruct in:</span>
           <span
             className={`tracking-widest text-sm font-bold flex items-center gap-2 ${timeRemaining !== null && timeRemaining < 60
               ? "text-red-500"
@@ -67,6 +68,8 @@ const ChatHeader = ({ timeRemaining, roomId }: Props) => {
         {/* <span className="group-hover:animate-pulse">💣</span> */}
         DESTROY ROOM
       </button>
+
+      <ModeToggle />
     </header>
   )
 }

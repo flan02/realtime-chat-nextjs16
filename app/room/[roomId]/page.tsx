@@ -10,6 +10,7 @@ import { format } from "date-fns"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { InferResponseType } from "hono/client"
+import { Zap } from "lucide-react"
 
 const Page = () => {
   const params = useParams()
@@ -99,7 +100,7 @@ const Page = () => {
 
 
   return (
-    <main className="flex flex-col h-screen max-h-screen overflow-hidden bg-black">
+    <main className="flex flex-col h-screen max-h-screen overflow-hidden bg-red-50 dark:bg-black">
       <ChatHeader timeRemaining={timeRemaining} roomId={roomId} />
 
       {/* MESSAGES */}
@@ -141,23 +142,23 @@ const Page = () => {
             return (<div key={msg.id} className={`flex flex-col w-full px-2`}>
               <div
                 className={`w-fit max-w-[80%] px-3 py-1.5 rounded-md border transition-all ${isMe
-                  ? "items-end border-red-700/30 bg-red-800/10 ml-auto text-right"
-                  : "items-start border-red-800/20 bg-zinc-900/50 mr-auto text-left"
+                  ? "items-end bg-red-200 border border-red-200/50 dark:border-red-700/30 dark:bg-red-800/10 ml-auto text-right"
+                  : "items-start bg-white dark:border-red-800/20 dark:bg-zinc-900/80 mr-auto text-left"
                   }`}
               >
                 <div className="flex items-baseline gap-3 mb-1">
                   <p
-                    className={`text-xs font-extrabold ${isMe ? "text-red-700/70" : "text-red-800/50"
+                    className={`text-xs font-extrabold ${isMe ? "dark:text-red-700/70 text-red-600" : "text-zinc-400 dark:text-red-800/60"
                       }`}
                   >
                     {msg.sender === username ? username : msg.sender}
                   </p>
 
-                  <span className="text-[10px] dark:text-yellow-300 text-zinc-600">
+                  <span className="text-[10px] text-zinc-600">
                     {format(msg.timestamp, "HH:mm")}
                   </span>
                 </div>
-                <p className={`text-[10px] lg:text-[13px] leading-relaxed break-all tracking-wider ${isMe ? "text-red-200" : "text-red-200"}`}>{msg.text}</p>
+                <p className={`text-[10px] lg:text-[13px] leading-relaxed break-all tracking-wider ${isMe ? "dark:text-red-200" : "dark:text-red-200 text-zinc-950"}`}>{msg.text}</p>
               </div>
             </div>
             )
@@ -169,7 +170,7 @@ const Page = () => {
         }
       </div>
 
-      <div className="p-4 border-t border-zinc-800 bg-zinc-900/30">
+      <div className="p-4 border-tborder-zinc-200 bg-red-100/30 dark:border-zinc-800 dark:bg-zinc-900/30">
         <div className="flex gap-4">
           <div className="flex-1 relative group">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 animate-pulse">
@@ -186,7 +187,7 @@ const Page = () => {
               }}
               placeholder="Type message..."
               onChange={(e) => setInput(e.target.value)}
-              className="w-full bg-black border border-red-500/50 focus:border-red-500 focus:outline-none transition-colors text-red-200 placeholder:text-zinc-700 py-3 pl-8 pr-4 text-sm tracking-wider"
+              className="w-full rounded-2xl bg-white dark:bg-black border border-red-500/50 focus:border-red-500 focus:outline-none transition-colors dark:text-red-200 text-zinc-950 placeholder:text-zinc-700 py-3 pl-8 pr-4 text-sm tracking-wider"
             />
           </div>
 
@@ -196,9 +197,9 @@ const Page = () => {
               inputRef.current?.focus()
             }}
             disabled={!input.trim() || isPending}
-            className="border border-red-500/50 text-red-500 hover:bg-red-500/10 focus:border-red-500 transition-all px-6 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="w-12 h-12 bg-red-600/80 text-white rounded-full border border-red-500/50 dark:text-zinc-300 hover:bg-red-600 dark:bg-red-800 hover:dark:bg-red-700/70 focus:border-red-500 transition-all px-3 text-sm font-bold disabled:bg-gray-700 disabled:dark:bg-[#111] disabled:cursor-not-allowed cursor-pointer"
           >
-            SEND
+            <Zap className="w-5 h-5" />
           </button>
         </div>
       </div>
