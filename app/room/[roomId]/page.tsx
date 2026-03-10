@@ -18,7 +18,7 @@ const Page = () => {
 
   const router = useRouter()
 
-  const { username } = useUsername()
+  const { username, isLoading: userLoading } = useUsername()
   const [input, setInput] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -34,12 +34,14 @@ const Page = () => {
 
   const { data: messages, isLoading } = useQuery<GetMessagesResponse>({
     queryKey: ["messages", roomId],
+    enabled: !!roomId && !userLoading,
     queryFn: async () => {
       const res = await client.api.messages.$get({
         query: { roomId }
       })
 
       if (!res.ok) {
+        if (res.status === 403) router.push("/?error=room-full")
         throw new Error("Failed to fetch messages")
       }
 

@@ -11,9 +11,10 @@ const generateUsername = () => {
 
 export const useUsername = () => {
   const [username, setUsername] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const main = () => {
+    const validateUser = () => {
       const stored = localStorage.getItem(STORAGE_KEY)
 
       if (stored) {
@@ -25,11 +26,12 @@ export const useUsername = () => {
         setUsername(generated)
 
       }
+      setIsLoading(false)
 
     }
 
-    main()
+    validateUser()
   }, [])
 
-  return { username }
+  return { username, isLoading }
 }
