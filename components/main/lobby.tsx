@@ -1,6 +1,6 @@
 'use client'
 import useRoom from "@/hooks/use-room"
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Menu, X } from 'lucide-react';
 import ChatErrors from "./ChatErrors";
 import { ModeToggle } from "../reutilizable/ModeToggle";
 
@@ -11,29 +11,33 @@ import { useEffect, useState } from "react";
 
 export function Lobby() {
   const [mounted, setMounted] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { username, createRoom } = useRoom()
   const { resolvedTheme } = useTheme()
 
-  // console.log("current theme", resolvedTheme);
   useEffect(() => {
-    async function isMounted() {
+    async function Check() {
+
       return setMounted(true);
     }
-    isMounted();
+
+    Check()
   }, []);
 
   if (!mounted) {
-    return <div className="size-8" />; // Placeholder del mismo tamaño
+    return <div className="min-h-screen hero-patterns" />;
   }
+
   return (
     <div className="min-h-screen hero-patterns text-white selection:bg-red-500/30">
       {/* Navbar */}
-      <nav className="flex justify-between items-center p-6 border-b border-white/10 max-w-7xl mx-auto">
+      <nav className="flex justify-between items-center p-4 sm:p-6 border-b border-white/10 max-w-7xl mx-auto relative">
         <div className="flex items-center gap-2 group cursor-default">
-          <Image src={resolvedTheme === "dark" ? "/darkmode-logo-trimmed.png" : "/lightmode-logo.png"} alt="gutout-logo" width={32} height={32} className="object-contain w-auto h-auto dark:w-auto dark:h-auto" priority />
-          <span className="text-4xl text-red-500 font-black tracking-tighter italic">GUT OUT</span>
-
+          <Image src={resolvedTheme === "dark" ? "/darkmode-logo-trimmed.png" : "/lightmode-logo.png"} alt="gutout-logo" width={32} height={32} className="sm:w-8 sm:h-8 lg:size-12 object-contain" priority />
+          <span className="text-2xl sm:text-4xl text-black dark:text-white font-black tracking-tighter italic">GUT OUT</span>
         </div>
+
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-5 text-xs font-medium text-zinc-400">
           <a href="#how" className="hover:text-red-500 transition-colors">HOW IT WORKS ?</a>
           <button className="px-4 py-2 border border-red-500/50 text-red-500 hover:bg-red-500/10 transition-all rounded-sm">
@@ -41,43 +45,70 @@ export function Lobby() {
           </button>
           <ModeToggle />
         </div>
+
+        {/* Mobile Menu Button */}
+        <div className="block md:hidden">
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white">
+            {mobileMenuOpen
+              ? <X className="w-6 h-6" />
+              : <Menu className="w-6 h-6 text-black dark:text-red-500" />}
+          </button>
+        </div>
+
+        {/* Mobile Menu Panel */}
+        {mobileMenuOpen && (
+          <div className="absolute top-12 h-auto right-0 mt-2 w-48 md:hidden bg-white dark:bg-[#111] backdrop-blur-sm border border-gray-200 dark:border-zinc-800 rounded-md shadow-lg z-40">
+            <div className="flex flex-col items-start p-4 space-y-4">
+              <div className="w-full flex justify-end">
+                <ModeToggle />
+              </div>
+              <button className="w-full text-left px-4 py-2 border border-red-500/50 text-red-500 hover:bg-red-500/10 transition-all rounded-sm text-xs">JOIN AS GUEST</button>
+              <a href="#how" onClick={() => setMobileMenuOpen(false)} className="dark:text-zinc-400 text-black hover:text-red-500 transition-colors text-[10px]">HOW IT WORKS ?</a>
+
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-6 pt-24 pb-32 text-center">
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-24 pb-24 sm:pb-32 text-center">
+        <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-6 sm:mb-8">
           <span className="text-black dark:text-white">GUT OUT</span>
-          <span className=" text-red-500"> THE NOISE.</span>
+          <span className="text-red-500"> THE NOISE.</span>
           <br />
           <span className="text-red-600">KEEP THE PRIVACY.</span>
         </h1>
-        <p className="max-w-2xl mx-auto text-zinc-600 text-lg mb-10">
+        <p className="max-w-2xl mx-auto text-zinc-600 text-base sm:text-lg mb-8 sm:mb-10">
           Anonymous, ephemeral, and crypto-powered chat sessions.
           No logs. No registration. No trace. Powered by Redis TTL.
         </p>
 
-        <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-          <button
-            onClick={() => createRoom()}
-            className="w-full md:w-auto px-8 py-4 bg-red-600 hover:opacity-80 text-white font-bold rounded-sm flex items-center justify-center gap-2 transition-transform active:scale-95">
-            START PRIVATE CHAT <ArrowRight className="w-5 h-5" />
-          </button>
+        <div className="flex justify-center mx-auto">
+          <div className="flex flex-col gap-2 max-w-md">
+            <button
+              onClick={() => createRoom()}
+              className="w-full px-6 py-4 bg-red-600 hover:opacity-80 text-white font-bold rounded-sm flex items-center justify-center gap-2 transition-transform active:scale-95 text-sm sm:text-base">
+              START PRIVATE CHAT <ArrowRight className="w-5 h-5" />
+            </button>
 
-          <div className="space-y-2 flex border border-zinc-800">
-
-            <div className="flex items-center gap-3">
-              <label className="text-zinc-500 pl-2 text-sm">Your Identity</label>
-              <div className="flex-1 bg-red-100/50 border dark:bg-zinc-950 dark:border dark:border-zinc-800 p-3 text-sm text-zinc-400 font-mono">
-                <span className="animate-pulse ">
+            <div className="w-full flex items-center border border-zinc-800 bg-zinc-950/90 rounded-sm">
+              <label className="text-zinc-500 pl-3 pt-0.5 text-xs sm:text-sm">Your Identity:</label>
+              <div className="flex-1 p-3 text-sm text-zinc-400 font-mono truncate">
+                <span className="animate-pulse">
                   {username}
                 </span>
               </div>
             </div>
-
           </div>
+
+          <div className="gap-2">
+            <Image src={resolvedTheme === "dark" ? "/darkmode-logo-trimmed.png" : "/lightmode-logo.png"} alt="gutout-logo" width={112} height={112} className="hidden lg:block lg:size-28 object-contain" priority />
+            {/* <span className="text-2xl sm:text-4xl text-red-500 font-black tracking-tighter italic">GUT OUT</span> */}
+          </div>
+
         </div>
 
-        <div className="pt-4">
+        <div className="pt-6">
           <p className="text-sm underline underline-offset-4 text-red-500/90">An easy-to-use, private, secure and self-destructing chat room.</p>
         </div>
 
@@ -89,12 +120,9 @@ export function Lobby() {
       </main>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-white/10 text-center text-zinc-600 text-sm lowercase">
+      <footer className="py-8 sm:py-12 border-t border-white/10 text-center text-zinc-600 text-xs sm:text-sm lowercase px-4">
         <p className="lowercase animate-pulse text-blue-500/40">GUTOUT.XYZ — BUILT FOR SURFING THE CLEAR WEB IN THE SHADOWS.</p>
       </footer>
     </div>
   );
-
-
-
 }

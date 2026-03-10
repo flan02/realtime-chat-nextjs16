@@ -10,7 +10,7 @@ const generateUsername = () => {
 }
 
 export const useUsername = () => {
-  const [username, setUsername] = useState("")
+  const [username, setUsername] = useState<string>("")
 
   useEffect(() => {
     const main = () => {
@@ -18,12 +18,14 @@ export const useUsername = () => {
 
       if (stored) {
         setUsername(stored)
-        return
+
+      } else {
+        const generated = generateUsername()
+        localStorage.setItem(STORAGE_KEY, generated)
+        setUsername(generated)
+
       }
 
-      const generated = generateUsername()
-      localStorage.setItem(STORAGE_KEY, generated)
-      setUsername(generated)
     }
 
     main()

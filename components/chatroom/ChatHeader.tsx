@@ -4,6 +4,7 @@ import { client } from '@/libs/client'
 import { formatTimeRemaining } from '@/utils/functions'
 import { useMutation } from '@tanstack/react-query'
 import { ModeToggle } from '../reutilizable/ModeToggle'
+import { Bomb } from 'lucide-react'
 
 
 
@@ -30,46 +31,51 @@ const ChatHeader = ({ timeRemaining, roomId }: Props) => {
 
 
   return (
-    <header className="border-b border-zinc-300 dark:border-zinc-800 p-4 flex items-center justify-between bg-red-100/30 dark:bg-zinc-900/30">
-      <div className="flex items-center gap-4">
-        <div className="flex flex-col">
-          <span className="text-xs text-zinc-500 uppercase">Room ID</span>
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-red-500 truncate">{roomId.slice(0, 10) + "..."}</span>
-            <button
-              onClick={() => copyLink(window.location.href)}
-              className="text-[10px] bg-zinc-800 hover:bg-zinc-700 px-2 py-0.5 rounded text-zinc-400 hover:text-zinc-200 transition-colors"
-            >
-              {copyStatus}
-            </button>
+    <header className="border-b border-zinc-300 dark:border-zinc-800 p-2 sm:p-4 flex items-center justify-between bg-red-100/30 dark:bg-zinc-900/30">
+      <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col">
+            <span className="text-xs text-zinc-500 uppercase">Room ID</span>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-red-500 truncate w-24 sm:w-auto">{roomId}</span>
+              <button
+                onClick={() => copyLink(window.location.href)}
+                className="text-[10px] bg-zinc-800 hover:bg-zinc-700 px-2 py-0.5 rounded text-zinc-400 hover:text-zinc-200 transition-colors"
+              >
+                {copyStatus}
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className="h-8 w-px bg-zinc-800" />
+          <div className="h-px w-full bg-zinc-300 dark:bg-zinc-800 sm:hidden" />
 
-        <div className="flex flex-col">
-          <span className="text-[11px] text-zinc-500 dark:text-red-200 uppercase">Chat will Self-Destruct in:</span>
-          <span
-            className={`tracking-widest text-sm font-bold flex items-center gap-2 ${timeRemaining !== null && timeRemaining < 60
-              ? "text-red-500"
-              : "text-amber-500"
-              }`}
-          >
-            {timeRemaining !== null ? formatTimeRemaining(timeRemaining) : "--:--"}
-          </span>
+          <div className="flex flex-col">
+            <span className="text-[11px] text-zinc-500 dark:text-red-200 uppercase">Self-Destruct in:</span>
+            <span
+              className={`tracking-widest text-sm font-bold flex items-center gap-2 ${timeRemaining !== null && timeRemaining < 60
+                ? "text-red-500"
+                : "text-amber-500"
+                }`}
+            >
+              {timeRemaining !== null ? formatTimeRemaining(timeRemaining) : "--:--"}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* SHOW A MODAL BEFORE WARNING THAT THE FOLLOWING ACTION WILL BE IRREVERSIBLE*/}
-      <button
-        onClick={() => destroyRoom()}
-        className="text-xs bg-zinc-800 hover:bg-red-600 px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-2 disabled:opacity-50"
-      >
-        {/* <span className="group-hover:animate-pulse">💣</span> */}
-        DESTROY ROOM
-      </button>
+      <div className="flex items-center gap-2">
+        {/* SHOW A MODAL BEFORE WARNING THAT THE FOLLOWING ACTION WILL BE IRREVERSIBLE*/}
+        <button
+          onClick={() => destroyRoom()}
+          className="text-xs border border-red-500 bg-white dark:bg-[#111] hover:dark:bg-[#222] hover:bg-red-200 px-3 py-1.5 rounded text-red-500 dark:text-red-200 hover:text-red-400 font-bold transition-all group flex items-center gap-2 disabled:opacity-50"
+        >
+          <span className="hidden sm:inline">DESTROY ROOM</span>
+          {/* <span className="sm:hidden">💣</span> */}
+          <Bomb size={14} className='text-red-600/80' />
+        </button>
 
-      <ModeToggle />
+        <ModeToggle />
+      </div>
     </header>
   )
 }

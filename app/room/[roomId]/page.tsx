@@ -100,15 +100,15 @@ const Page = () => {
 
 
   return (
-    <main className="flex flex-col h-screen max-h-screen overflow-hidden bg-red-50 dark:bg-black">
+    <main className="flex flex-col h-screen max-h-dvh overflow-hidden bg-red-50 dark:bg-black">
       <ChatHeader timeRemaining={timeRemaining} roomId={roomId} />
 
       {/* MESSAGES */}
-      <div className="flex-1 overflow-y-auto p-4 my-2 space-y-1 scrollbar-thin border border-red-600/30 w-[80%] mx-auto rounded-md hero-patterns">
+      <div className="flex-1 overflow-y-auto p-2 sm:p-4 my-2 space-y-1 scrollbar-thin border border-red-600/30 w-full md:w-[90%] lg:w-[80%] mx-auto rounded-md hero-patterns">
         {
           Array.isArray(messages) && messages.length === 0 && (
             <div className="flex items-center justify-center h-full">
-              <p className="text-red-600 text-sm font-mono tracking-wider">
+              <p className="text-red-600 text-sm font-mono tracking-wider text-center">
                 No messages yet, start the conversation.
               </p>
             </div>
@@ -170,10 +170,10 @@ const Page = () => {
         }
       </div>
 
-      <div className="p-4 border-tborder-zinc-200 bg-red-100/30 dark:border-zinc-800 dark:bg-zinc-900/30">
-        <div className="flex gap-4">
+      <div className="lg:p-4 px-1 py-2 border-tborder-zinc-200 bg-red-100/30 dark:border-zinc-800 dark:bg-zinc-900/30">
+        <div className="flex gap-1 lg:gap-4 lg:w-[80%] lg:mx-auto">
           <div className="flex-1 relative group">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 animate-pulse">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-red-500 animate-pulse">
               {">"}
             </span>
             <input
@@ -197,7 +197,7 @@ const Page = () => {
               inputRef.current?.focus()
             }}
             disabled={!input.trim() || isPending}
-            className="w-12 h-12 bg-red-600/80 text-white rounded-full border border-red-500/50 dark:text-zinc-300 hover:bg-red-600 dark:bg-red-800 hover:dark:bg-red-700/70 focus:border-red-500 transition-all px-3 text-sm font-bold disabled:bg-gray-700 disabled:dark:bg-[#111] disabled:cursor-not-allowed cursor-pointer"
+            className="w-11 h-11 lg:w-12 lg:h-12 bg-red-600/80 text-white rounded-full border border-red-500/50 dark:text-zinc-300 hover:bg-red-600 dark:bg-red-800 hover:dark:bg-red-700/70 focus:border-red-500 transition-all px-2.5 lg:px-3 text-sm font-bold disabled:bg-gray-700 disabled:dark:bg-[#111] disabled:cursor-not-allowed cursor-pointer"
           >
             <Zap className="w-5 h-5" />
           </button>
