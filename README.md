@@ -19,3 +19,7 @@ nextjs - hono - upstash/redis
 | Express   | (req, res, next)         | Separated objects               |
 | Elysia    | ({ query, set, cookie }) | Destructured context            |
 | Hono      | (c)                      | Centralized and unique context  |
+
+## Best favicons for website and mobile desing
+
+[realfavicon](https://realfavicongenerator.net/)

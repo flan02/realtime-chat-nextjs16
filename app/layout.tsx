@@ -6,11 +6,31 @@ import { ThemeProvider } from "@/components/reutilizable/theme-provider";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: "Self-destructing chat app",
-  description: "Created by Nextjs 16, Redis",
+  title: {
+    default: "Gut out | Home",
+    template: "Gut out | %s"
+  },
+  description: "Anonymous, ephemeral, and crypto-powered chat sessions.",
+  metadataBase: new URL(`${process.env.APP_URL}`),
+  authors: {
+    name: "Dan Chanivet",
+    url: "https://danchanivet.xyz",
+  },
+  publisher: "Vercel",
+  openGraph: {
+    images: [
+      {
+        url: "./opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Gut out thumbnail",
+      },
+
+    ]
+  }
 };
 
 export default function RootLayout({

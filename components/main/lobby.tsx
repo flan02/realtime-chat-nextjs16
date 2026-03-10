@@ -48,23 +48,30 @@ export function Lobby() {
 
         {/* Mobile Menu Button */}
         <div className="block md:hidden">
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white">
-            {mobileMenuOpen
-              ? <X className="w-6 h-6" />
-              : <Menu className="w-6 h-6 text-black dark:text-red-500" />}
-          </button>
+          <div className="flex items-center gap-1"> {/* Contenedor para separar los elementos */}
+
+            {/* El Toggle ahora es independiente, no dispara el menú */}
+            {!mobileMenuOpen && <ModeToggle />}
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="text-white p-1"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6 text-black dark:text-red-500" />
+              ) : (
+                <Menu className="w-6 h-6 text-red-500 dark:text-red-500" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu Panel */}
         {mobileMenuOpen && (
-          <div className="absolute top-12 h-auto right-0 mt-2 w-48 md:hidden bg-white dark:bg-[#111] backdrop-blur-sm border border-gray-200 dark:border-zinc-800 rounded-md shadow-lg z-40">
-            <div className="flex flex-col items-start p-4 space-y-4">
-              <div className="w-full flex justify-end">
-                <ModeToggle />
-              </div>
-              <button className="w-full text-left px-4 py-2 border border-red-500/50 text-red-500 hover:bg-red-500/10 transition-all rounded-sm text-xs">JOIN AS GUEST</button>
+          <div className="absolute top-12 h-auto right-0 mt-2 w-48 md:hidden bg-red-50 dark:bg-[#111] backdrop-blur-sm border border-gray-200 dark:border-zinc-800 rounded-md shadow-lg z-40">
+            <div className="flex flex-col items-start px-2 py-4 space-y-4">
+              <button className="w-full text-left px-0 py-2 border-b border-b-red-500/50 rounded-none text-red-500 transition-all text-xs">JOIN AS GUEST</button>
               <a href="#how" onClick={() => setMobileMenuOpen(false)} className="dark:text-zinc-400 text-black hover:text-red-500 transition-colors text-[10px]">HOW IT WORKS ?</a>
-
             </div>
           </div>
         )}
@@ -72,13 +79,13 @@ export function Lobby() {
 
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-24 pb-24 sm:pb-32 text-center">
-        <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-6 sm:mb-8">
-          <span className="text-black dark:text-white">GUT OUT</span>
+        <h1 className="text-[52px] sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tight leading-none lg:leading-[1.10] lg:tracking-tighter mb-6 sm:mb-8">
+          <span className="text-black dark:text-white block lg:inline underline">GUT OUT</span>
           <span className="text-red-500"> THE NOISE.</span>
           <br />
           <span className="text-red-600">KEEP THE PRIVACY.</span>
         </h1>
-        <p className="max-w-2xl mx-auto text-zinc-600 text-base sm:text-lg mb-8 sm:mb-10">
+        <p className="max-w-xl mx-auto text-zinc-600 text-sm sm:text-lg mb-8 sm:mb-10">
           Anonymous, ephemeral, and crypto-powered chat sessions.
           No logs. No registration. No trace. Powered by Redis TTL.
         </p>
@@ -102,14 +109,14 @@ export function Lobby() {
           </div>
 
           <div className="gap-2">
-            <Image src={resolvedTheme === "dark" ? "/darkmode-logo-trimmed.png" : "/lightmode-logo.png"} alt="gutout-logo" width={112} height={112} className="hidden lg:block lg:size-28 object-contain" priority />
+            <Image src={resolvedTheme === "dark" ? "/darkmode-logo-trimmed.png" : "/lightmode-logo.png"} alt="gutout-logo" width={112} height={112} className="hidden lg:block lg:size-28 object-contain animate-levitate" priority />
             {/* <span className="text-2xl sm:text-4xl text-red-500 font-black tracking-tighter italic">GUT OUT</span> */}
           </div>
 
         </div>
 
-        <div className="pt-6">
-          <p className="text-sm underline underline-offset-4 text-red-500/90">An easy-to-use, private, secure and self-destructing chat room.</p>
+        <div className="pt-6 lg:pt-8">
+          <p className="text-xs lg:text-sm underline underline-offset-4 text-red-500/90">An easy-to-use, private, secure and self-destructing chat room.</p>
         </div>
 
         {/* Error Messages */}
