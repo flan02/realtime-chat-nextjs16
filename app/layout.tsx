@@ -9,6 +9,15 @@ import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Gut out",
+  },
+  icons: {
+    apple: "/web-app-manifest-192x192.png"
+  },
   title: {
     default: "Gut out | Home",
     template: "Gut out | %s"
@@ -26,10 +35,11 @@ export const metadata: Metadata = {
         url: "./opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Gut out thumbnail",
+        type: "image/png",
+        alt: "Gut out thumbnail"
       },
-
-    ]
+    ],
+    type: "website"
   }
 };
 

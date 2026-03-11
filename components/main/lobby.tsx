@@ -70,8 +70,8 @@ export function Lobby() {
         {mobileMenuOpen && (
           <div className="absolute top-12 h-auto right-0 mt-2 w-48 md:hidden bg-red-50 dark:bg-[#111] backdrop-blur-sm border border-gray-200 dark:border-zinc-800 rounded-md shadow-lg z-40">
             <div className="flex flex-col items-start px-2 py-4 space-y-4">
-              <button className="w-full text-left px-0 py-2 border-b border-b-red-500/50 rounded-none text-red-500 transition-all text-xs">JOIN AS GUEST</button>
-              <a href="#how" onClick={() => setMobileMenuOpen(false)} className="dark:text-zinc-400 text-black hover:text-red-500 transition-colors text-[10px]">HOW IT WORKS ?</a>
+              <button className="w-full text-left px-0 py-2 border-b border-b-red-500/50 rounded-none text-red-500 transition-all text-xs hover:underline">JOIN AS GUEST</button>
+              <a href="#how" onClick={() => setMobileMenuOpen(false)} className="dark:text-zinc-400 text-black hover:text-red-500 transition-colors text-[10px] hover:underline">HOW IT WORKS ?</a>
             </div>
           </div>
         )}
@@ -79,7 +79,7 @@ export function Lobby() {
 
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-24 pb-24 sm:pb-32 text-center">
-        <h1 className="text-[52px] sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tight leading-none lg:leading-[1.10] lg:tracking-tighter mb-6 sm:mb-8">
+        <h1 className="text-[52px] sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tight leading-[1.05] lg:leading-[1.10] lg:tracking-tighter mb-6 sm:mb-8">
           <span className="text-black dark:text-white block lg:inline underline">GUT OUT</span>
           <span className="text-red-500"> THE NOISE.</span>
           <br />
