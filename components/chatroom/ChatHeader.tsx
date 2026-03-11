@@ -24,7 +24,7 @@ const ChatHeader = ({ timeRemaining, roomId }: Props) => {
     },
     onSuccess: () => {
       console.log("Room destroyed");
-      window.location.href = "/?destroyed=true" // Redirect to home after destroying the room
+      window.location.href = "/splash-screen?destroyed=true" // Redirect to home after destroying the room
     }
   }
   )

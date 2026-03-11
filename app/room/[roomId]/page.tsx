@@ -83,7 +83,7 @@ const Page = () => {
       }
 
       if (event === "chat.destroy") {
-        router.push("/?destroyed=true")
+        router.push("/splash-screen?destroyed=true")
       }
     },
   })
@@ -101,9 +101,16 @@ const Page = () => {
 
   }, [messages]);
 
+  // const handleSendMessage = () => {
+  //   if ("vibrate" in navigator) {
+  //     navigator.vibrate(10); // Una vibración casi imperceptible de 10ms
+  //   }
+  //   // ... tu lógica de envío
+  // };
+
 
   return (
-    <main className="flex flex-col h-screen max-h-dvh overflow-hidden bg-red-50 dark:bg-black">
+    <main className="main-container flex flex-col h-screen max-h-dvh overflow-hidden bg-red-50 dark:bg-black">
       <ChatHeader timeRemaining={timeRemaining} roomId={roomId} />
 
       {/* MESSAGES */}

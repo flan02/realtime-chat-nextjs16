@@ -1,13 +1,13 @@
 'use client'
 import useRoom from "@/hooks/use-room"
 import { ArrowRight, Menu, X } from 'lucide-react';
-import ChatErrors from "./ChatErrors";
 import { ModeToggle } from "../reutilizable/ModeToggle";
 
 import CardWhatDoWeOffer from "../reutilizable/CardWhatDoWeOffer";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { InstallPWA } from "../reutilizable/InstallPWA";
 
 export function Lobby() {
   const [mounted, setMounted] = useState(false);
@@ -16,12 +16,12 @@ export function Lobby() {
   const { resolvedTheme } = useTheme()
 
   useEffect(() => {
-    async function Check() {
+    async function ClientSide() {
 
       return setMounted(true);
     }
 
-    Check()
+    ClientSide()
   }, []);
 
   if (!mounted) {
@@ -32,9 +32,9 @@ export function Lobby() {
     <div className="min-h-screen hero-patterns text-white selection:bg-red-500/30">
       {/* Navbar */}
       <nav className="flex justify-between items-center p-4 sm:p-6 border-b border-white/10 max-w-7xl mx-auto relative">
-        <div className="flex items-center gap-2 group cursor-default">
-          <Image src={resolvedTheme === "dark" ? "/darkmode-logo-trimmed.png" : "/lightmode-logo.png"} alt="gutout-logo" width={32} height={32} className="sm:w-8 sm:h-8 lg:size-12 object-contain" priority />
-          <span className="text-2xl sm:text-4xl text-black dark:text-white font-black tracking-tighter italic">GUT OUT</span>
+        <div className="flex items-center gap-2 md:gap-1 group cursor-default">
+          <Image src={resolvedTheme === "dark" ? "/darkmode-logo-trimmed.png" : "/lightmode-logo.png"} alt="gutout-logo" width={16} height={16} className="sm:w-8 sm:h-8 lg:size-12 object-contain" priority />
+          <span className="text-lg sm:text-2xl text-black dark:text-white font-black tracking-tighter italic">GUT OUT</span>
         </div>
 
         {/* Desktop Menu */}
@@ -76,6 +76,8 @@ export function Lobby() {
           </div>
         )}
       </nav>
+      {/* Install PWA*/}
+      <InstallPWA />
 
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-24 pb-24 sm:pb-32 text-center">
@@ -85,7 +87,7 @@ export function Lobby() {
           <br />
           <span className="text-red-600">KEEP THE PRIVACY.</span>
         </h1>
-        <p className="max-w-xl mx-auto text-zinc-600 text-sm sm:text-lg mb-8 sm:mb-10">
+        <p className="max-w-xl mx-auto text-zinc-600 text-sm sm:text-lg mb-8 sm:mb-10 tracking-tight">
           Anonymous, ephemeral, and crypto-powered chat sessions.
           No logs. No registration. No trace. Powered by Redis TTL.
         </p>
@@ -118,9 +120,6 @@ export function Lobby() {
         <div className="pt-6 lg:pt-8">
           <p className="text-xs lg:text-sm underline underline-offset-4 text-red-500/90">An easy-to-use, private, secure and self-destructing chat room.</p>
         </div>
-
-        {/* Error Messages */}
-        <ChatErrors />
 
         {/* Features Grid */}
         <CardWhatDoWeOffer />

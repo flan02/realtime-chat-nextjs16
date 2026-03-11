@@ -43,8 +43,7 @@ const useTimeToLive = () => {
     if (timeRemaining !== null && timeRemaining < 0) return
 
     if (timeRemaining === 0) {
-      // router.push("/?destroyed=true")
-      router.replace("/?destroyed=true")
+      router.replace("/splash-screen?destroyed=true")
       return
     }
 
