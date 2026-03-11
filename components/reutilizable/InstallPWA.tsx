@@ -3,10 +3,13 @@ import { Download } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function InstallPWA() {
-  const test = process.env.NEXT_PUBLIC_PWA == "true" ? true : false
+  // const test = process.env.NEXT_PUBLIC_PWA == "true" ? true : false
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [isInstallable, setIsInstallable] = useState<boolean>(test); // * false = production
+
+  // const [isInstallable, setIsInstallable] = useState<boolean>(test); // * false = production
+  const [isInstallable, setIsInstallable] = useState(false); // * false = production
 
   useEffect(() => {
     const handler = (e: Event) => {

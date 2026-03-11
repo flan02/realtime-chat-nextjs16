@@ -156,16 +156,16 @@
 }
 
 /* Solo aplica en pantallas menores a 768px */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   ::-webkit-scrollbar {
     display: none;
   }
 
-  /* Para Firefox */
+  
   * {
     scrollbar-width: none;
   }
-}
+} */
 
 @layer base {
   * {
