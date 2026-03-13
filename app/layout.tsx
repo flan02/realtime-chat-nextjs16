@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/reutilizable/theme-provider";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 
+
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
@@ -54,9 +55,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+
           <Providers>
             {children}
           </Providers>
+
         </ThemeProvider>
       </body>
     </html>
