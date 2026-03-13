@@ -25,9 +25,6 @@ const Page = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
-
-
-
   const { timeRemaining } = useTimeToLive()
 
   type GetMessagesResponse = InferResponseType<typeof client.api.messages.$get>
@@ -98,8 +95,9 @@ const Page = () => {
       // console.log("Messages metadata updated", messages);
       scrollToBottom();
     }
-
   }, [messages]);
+
+
 
   // const handleSendMessage = () => {
   //   if ("vibrate" in navigator) {
@@ -110,11 +108,11 @@ const Page = () => {
 
 
   return (
-    <main className="main-container flex flex-col h-screen max-h-dvh overflow-hidden bg-red-50 dark:bg-black">
+    <main className="flex flex-col h-screen max-h-dvh overflow-hidden bg-red-50 dark:bg-black">
       <ChatHeader timeRemaining={timeRemaining} roomId={roomId} />
 
       {/* MESSAGES */}
-      <div className="flex-1 overflow-y-auto p-2 sm:p-4 my-2 space-y-1 scrollbar-thin border border-red-600/30 w-full md:w-[90%] lg:w-[80%] mx-auto rounded-md hero-patterns">
+      <div className="main-container flex-1 overflow-y-auto p-2 sm:p-4 my-2 space-y-1 scrollbar-thin border border-red-600/30 w-full md:w-[90%] lg:w-[80%] mx-auto rounded-md hero-patterns">
         {
           Array.isArray(messages) && messages.length === 0 && (
             <div className="flex items-center justify-center h-full">

@@ -156,16 +156,15 @@
 }
 
 /* Solo aplica en pantallas menores a 768px */
-/* @media (max-width: 767px) {
+@media (max-width: 767px) {
   ::-webkit-scrollbar {
     display: none;
   }
 
-  
   * {
     scrollbar-width: none;
   }
-} */
+}
 
 @layer base {
   * {
@@ -180,9 +179,9 @@
   html,
   body {
     /* Evita el scroll "rebotín" de las webs en iOS */
-    overflow: hidden;
-    overscroll-behavior: none;
-    height: 100%;
+    overflow: unset;
+    overscroll-behavior-y: none;
+    min-height: 100%;
     /* Evita que el usuario pueda seleccionar texto en toda la app (opcional, para que parezca más nativa) */
     -webkit-user-select: none;
     user-select: none;

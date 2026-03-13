@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { InstallPWA } from "../reutilizable/InstallPWA";
+import Footer from "./Footer";
 
 export function Lobby() {
   const [mounted, setMounted] = useState(false);
@@ -120,15 +121,12 @@ export function Lobby() {
         <div className="pt-6 lg:pt-8">
           <p className="text-xs lg:text-sm underline underline-offset-4 text-red-500/90">An easy-to-use, private, secure and self-destructing chat room.</p>
         </div>
-
         {/* Features Grid */}
         <CardWhatDoWeOffer />
       </main>
 
       {/* Footer */}
-      <footer className="py-8 sm:py-12 border-t border-white/10 text-center text-zinc-600 text-xs sm:text-sm lowercase px-4">
-        <p className="lowercase animate-pulse text-blue-500/40">GUTOUT.XYZ — BUILT FOR SURFING THE CLEAR WEB IN THE SHADOWS.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

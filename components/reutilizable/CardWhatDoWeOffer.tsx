@@ -23,12 +23,12 @@ const CardWhatDoWeOffer = () => {
   return (
     <div id="how" className="grid md:grid-cols-3 gap-12 mt-32 text-left">
       {cards.map((card, index) => (
-        <div key={index} className="space-y-4 p-6 border border-red-200/60 dark:border-red-950/40 bg-red-100/30 dark:bg-zinc-950/50 rounded-lg hover:border-red-500/30 transition-colors group">
+        <div key={index} className="space-y-4 p-6 border border-red-200/60 dark:border-red-950/70 bg-red-100/30 dark:bg-zinc-950/50 rounded-lg hover:border-red-500/30 transition-colors group">
           <div className="w-12 h-12 bg-red-500/10 flex items-center justify-center rounded-sm text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
             {card.icon}
           </div>
           <h3 className="text-xl font-bold text-red-500 dark:text-white">{card.title}</h3>
-          <p className="text-zinc-500 leading-relaxed">
+          <p className="text-zinc-500 leading-relaxed text-sm md:text-base">
             {card.description}
           </p>
         </div>

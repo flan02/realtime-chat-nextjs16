@@ -56,8 +56,8 @@ export function InstallPWA() {
   return (
     <button
       onClick={handleInstallClick}
-      className="text-[10px] flex gap-2 md:text-base fixed bottom-4 right-4 bg-red-600 text-white px-2 py-1 md:px-4 md:py-2 rounded-full shadow-lg font-bold animate-bounce hover:bg-red-700 transition-colors z-50">
-      <Download size={20} className="mt-0.5" />
+      className="text-xs flex gap-2 md:text-base fixed bottom-4 right-4 bg-red-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg font-bold animate-bounce hover:bg-red-700 transition-colors z-50">
+      <Download size={16} className="mt-0 lg:mt-1" />
       Install App 📱
     </button>
   );
