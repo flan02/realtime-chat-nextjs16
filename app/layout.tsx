@@ -51,10 +51,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={cn("font-sans", inter.variable)}>
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://gutout-anonymouschat.vercel.app/" />
+      <meta property="og:title" content="Gut out | Anonymous Chat" />
+      <meta property="og:description" content="Anonymous, ephemeral, and crypto-powered chat sessions." />
       <meta property="og:image" content="https://gutout-anonymouschat.vercel.app/og-image.jpg" />
-      <meta property="og:image:type" content="image/jpeg" />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta property="twitter:domain" content="gutout-anonymouschat.vercel.app" />
+      <meta property="twitter:url" content="https://gutout-anonymouschat.vercel.app/" />
+      <meta name="twitter:title" content="Gut out | Anonymous Chat" />
+      <meta name="twitter:description" content="Anonymous, ephemeral, and crypto-powered chat sessions." />
+      <meta name="twitter:image" content="https://gutout-anonymouschat.vercel.app/og-image.jpg" />
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} antialiased`}
       >
