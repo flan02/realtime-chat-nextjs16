@@ -14,7 +14,7 @@ const WrapperClient = ({ children }: WrapperClientProps) => {
     return <LoaderGutout />
   }
 
-  return <>{children}</>
+  return <div className="hero-patterns">{children}</div>
 }
 
 export default WrapperClient
